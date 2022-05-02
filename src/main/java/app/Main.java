@@ -9,8 +9,8 @@ public class Main {
         SignalHandler ignoreHandler = sig -> System.out.print("");
         Signal.handle(new Signal("INT"), ignoreHandler);
 
-        //String filepath = System.getenv("LAB5_PATH");
-        String filepath = "src\\main\\resources\\collection.json";
+        String filepath = System.getenv("LAB5_PATH");
+        //String filepath = "src\\main\\resources\\collection.json";
         CommandManager commandManager = new CommandManager(filepath);
         System.out.println(commandManager.execute(new String[]{"help"}));
         commandManager.run();
