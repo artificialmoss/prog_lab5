@@ -54,6 +54,7 @@ public class JsonParser implements GetFile {
      */
     public String fileToString(String filename) {
         try {
+            getReadableFile(filename);
             StringBuilder fileContent = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             String line = br.readLine();
