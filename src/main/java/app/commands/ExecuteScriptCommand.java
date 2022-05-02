@@ -6,15 +6,16 @@ import app.exceptions.NoScriptException;
 import app.exceptions.RecursiveScriptException;
 import app.exceptions.WrongAmountOfArgumentsException;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.EmptyStackException;
 import java.util.Scanner;
 
+/**
+ * Command for executing scripts
+ */
 public class ExecuteScriptCommand extends Command {
     private final CommandManager commandManager;
     private File file;

@@ -2,6 +2,10 @@ package app.utils;
 
 import java.util.Scanner;
 
+/**
+ * Class for storing the current mode of the command manager.
+ * Contains the mode (interactive/script) and the Scanner that is currently used by the command manager for reading the commands.
+ */
 public class Mode {
     private boolean scriptMode;
     private Scanner s;

@@ -4,6 +4,9 @@ import app.utils.CollectionManager;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.exceptions.WrongArgumentException;
 
+/**
+ * Command that removes element with the specified id from the collection
+ */
 public class RemoveByIdCommand extends Command {
     private final CollectionManager collectionManager;
     private Long id;

@@ -3,6 +3,9 @@ package app.commands;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.CollectionManager;
 
+/**
+ * Command for grouping elements of the collection by their heights and showing the size of each group
+ */
 public class GroupByHeightCommand extends Command {
     private final CollectionManager collectionManager;
 

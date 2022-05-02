@@ -6,6 +6,9 @@ import app.exceptions.WrongAmountOfArgumentsException;
 import app.exceptions.WrongArgumentException;
 import app.utils.Mode;
 
+/**
+ * Command for updating the element of the collection with the specified id
+ */
 public class UpdateByIdCommand extends Command {
     private final CollectionManager collectionManager;
     private Long id;

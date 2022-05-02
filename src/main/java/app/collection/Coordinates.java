@@ -1,6 +1,8 @@
 package app.collection;
 
-
+/**
+ * Class for coordinates (double x, float y).
+ */
 public class Coordinates {
     private double x; //Максимальное значение поля: 212
     private Float y; //Поле не может быть null

@@ -4,6 +4,9 @@ import app.exceptions.WrongAmountOfArgumentsException;
 
 import java.util.Map;
 
+/**
+ * Command that provides information about all commands available in the application
+ */
 public class HelpCommand extends Command {
     private final Map<String, Command> commandMap;
             

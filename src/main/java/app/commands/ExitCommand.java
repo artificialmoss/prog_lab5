@@ -2,6 +2,9 @@ package app.commands;
 
 import app.exceptions.WrongAmountOfArgumentsException;
 
+/**
+ * Command for exiting the program
+ */
 public class ExitCommand extends Command {
 
     public ExitCommand() {

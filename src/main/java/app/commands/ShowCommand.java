@@ -3,6 +3,9 @@ package app.commands;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.CollectionManager;
 
+/**
+ * Command for showing all current contents of the collection
+ */
 public class ShowCommand extends Command {
     private final CollectionManager collectionManager;
 

@@ -3,6 +3,9 @@ package app.commands;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.CollectionManager;
 
+/**
+ * Command for clearing the collection
+ */
 public class ClearCommand extends Command {
     private final CollectionManager collectionManager;
 

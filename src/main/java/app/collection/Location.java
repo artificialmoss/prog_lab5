@@ -1,5 +1,8 @@
 package app.collection;
 
+/**
+ * Class for location (int x, Double y, String name).
+ */
 public class Location {
     private int x;
     private Double y; //Поле не может быть null

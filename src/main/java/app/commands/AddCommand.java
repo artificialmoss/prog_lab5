@@ -7,11 +7,19 @@ import app.utils.CollectionManager;
 
 import java.util.Scanner;
 
+/**
+ * Command for adding elements to the collection
+ */
 public class AddCommand extends Command {
     private final CollectionManager collectionManager;
     private final Mode mode;
     private Person person;
 
+    /**
+     * Constructor
+     * @param collectionManager CollectionManager the collection manager
+     * @param mode Mode mode of the command manager
+     */
     public AddCommand(CollectionManager collectionManager, Mode mode) {
         super("add {element}", "add new element to the collection");
         this.collectionManager = collectionManager;

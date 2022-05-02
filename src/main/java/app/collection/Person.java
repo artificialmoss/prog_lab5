@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
+/**
+ * Person – element of the collection that the application manages.
+ */
 public class Person implements Comparable<Person> {
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -17,8 +20,22 @@ public class Person implements Comparable<Person> {
     private Country nationality; //Поле может быть null
     private Location location; //Поле не может быть null
 
+    /**
+     * Empty constructor, used for reading the collection from JSON file via Jackson's ObjectMapper.
+     */
     public Person(){}
 
+    /**
+     * Constructor.
+     * @param id Long id of
+     * @param name String name
+     * @param coordinates Coordinates coordinates
+     * @param height Long height
+     * @param birthday LocalDateTime date and time of birth
+     * @param hairColor Color hair color
+     * @param nationality Country nationality
+     * @param location Location locatiob
+     */
     public Person(Long id, String name, Coordinates coordinates, Long height, LocalDateTime birthday,
         Color hairColor, Country nationality, Location location)
     {
@@ -33,6 +50,10 @@ public class Person implements Comparable<Person> {
         creationDate = ZonedDateTime.now();
     }
 
+    /**
+     * Checks whether the element's fields match their requirements
+     * @return boolean true if the requirements are satisfied
+     */
     public boolean check() {
         return (id != null && id > 0) && (name != null && !name.trim().isEmpty()) && (coordinates!= null && coordinates.check()) &&
                 creationDate != null && (height != null && height > 0) && hairColor != null && (location != null && location.check());
@@ -82,6 +103,11 @@ public class Person implements Comparable<Person> {
         return id.hashCode();
     }
 
+    /**
+     * Overridden method for comparing two elements
+     * @param p Person comparable object
+     * @return boolean result of comparing the elements' heights
+     */
     @Override
     public int compareTo(Person p) {
         return this.height.compareTo(p.getHeight());

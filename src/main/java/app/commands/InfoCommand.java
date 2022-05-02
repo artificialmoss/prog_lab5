@@ -6,6 +6,9 @@ import app.exceptions.WrongAmountOfArgumentsException;
 
 import java.lang.reflect.Field;
 
+/**
+ * Command that provides basic information about the collection (its type, size, initialization date, element size and element fields)
+ */
 public class InfoCommand extends Command {
     private final CollectionManager collectionManager;
 

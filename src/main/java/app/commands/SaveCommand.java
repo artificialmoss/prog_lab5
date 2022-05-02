@@ -4,6 +4,10 @@ import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.CollectionManager;
 import app.utils.JsonParser;
 
+/**
+ * Command that saves the collection to either the path specified by environment variable LAB5_PATH or the default path.
+ * If both are unavailable, the collection will not be saved.
+ */
 public class SaveCommand extends Command {
     private CollectionManager collectionManager;
     private String filepath;

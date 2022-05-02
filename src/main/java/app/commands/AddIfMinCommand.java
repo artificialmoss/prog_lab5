@@ -7,6 +7,9 @@ import app.utils.Mode;
 
 import java.util.Scanner;
 
+/**
+ * Command for adding the element to the collection if it is smaller than the current minimal element of the collection, according to the elemen't natural order
+ */
 public class AddIfMinCommand extends Command {
     private final CollectionManager collectionManager;
     private Person person;

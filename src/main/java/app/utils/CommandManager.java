@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Class that manages all commands for the collection
+ */
 public class CommandManager {
     private final CollectionManager collectionManager;
     private final Stack<String> scriptHistory = new Stack<>();
@@ -16,6 +19,10 @@ public class CommandManager {
     private final JsonParser parser;
     private final Map<String, Command> commandMap = new HashMap<>();
 
+    /**
+     * Constructor, initializes the collection stored in the file specified by filepath
+     * @param filepath String Filepath
+     */
     public CommandManager(String filepath) {
         mode = new Mode();
         parser = new JsonParser();
@@ -32,6 +39,9 @@ public class CommandManager {
         return mode.getScriptMode();
     }
 
+    /**
+     * Method for initializing all commands
+     */
     public void initializeCommandMap() {
         commandMap.put("help", new HelpCommand(commandMap));
         commandMap.put("info", new InfoCommand(collectionManager));
@@ -51,6 +61,12 @@ public class CommandManager {
         commandMap.put("group", new GroupByHeightCommand(collectionManager));
     }
 
+    /**
+     * Method for executing a command
+     * @param s String Command and arguments
+     * @return String The result
+     * @throws ScriptErrorException Thrown when the mistake in the script is encountered
+     */
     public String execute(String[] s) throws ScriptErrorException {
         try {
             Command c = getCommand(s).setArgs(s);
@@ -75,7 +91,14 @@ public class CommandManager {
         return null;
     }
 
-    public Command getCommand(String[] s) {
+    /**
+     * Method for matching an input line with the corresponding command
+     * @param s String[] Input line, split by whitespace characters
+     * @return Command The corresponding commands
+     * @throws NoCommandException When the input is empty
+     * @throws WrongCommandException When the input is not empty and doesn't correspond to any command
+     */
+    public Command getCommand(String[] s) throws NoCommandException, WrongCommandException {
         if (s.length == 0) {
             throw new NoCommandException();
         }
@@ -86,6 +109,9 @@ public class CommandManager {
         } else throw new WrongCommandException();
     }
 
+    /**
+     * Method for running the process of command executing
+     */
     public void run() {
         while (true) {
             if (!getScriptMode()) {
@@ -105,6 +131,11 @@ public class CommandManager {
         }
     }
 
+    /**
+     * Method for adding a script to the script history and setting the mode of the command manager for its execution
+     * @param file File The script file
+     * @throws FileNotFoundException Thrown when the process of reading the script encounters an unexpected input error
+     */
     public void addScript(File file) throws FileNotFoundException {
         try {
             String path = file.getCanonicalPath();
@@ -120,6 +151,10 @@ public class CommandManager {
         }
     }
 
+    /**
+     * Method for removing the script from the script history and adjusting the mode of the command manager for further work
+     * @param prevScanner Scanner Scanner that was used before the execution of the script
+     */
     public void removeScript(Scanner prevScanner) {
         scriptHistory.pop();
         if (scriptHistory.isEmpty()) {
@@ -132,10 +167,18 @@ public class CommandManager {
         }
     }
 
+    /**
+     * Method for getting the last (most recent) element of the script history
+     * @return String The canonical path of the last script in the script history
+     */
     public String peek() {
         return scriptHistory.peek();
     }
 
+    /**
+     * Method for clearing the script history
+     * @return String The first (the oldest) element of the script history
+     */
     public String clearScriptHistory() {
         String filename = null;
         while (!scriptHistory.empty()) {

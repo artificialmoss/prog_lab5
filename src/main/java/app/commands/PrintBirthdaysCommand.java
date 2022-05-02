@@ -3,6 +3,9 @@ package app.commands;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.CollectionManager;
 
+/**
+ * Command that prints birthdays of all elements that are currently stored in the collection
+ */
 public class PrintBirthdaysCommand extends Command {
     private final CollectionManager collectionManager;
 

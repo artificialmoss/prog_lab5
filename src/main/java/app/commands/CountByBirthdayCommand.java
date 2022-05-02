@@ -8,6 +8,9 @@ import app.utils.CollectionManager;
 import java.time.LocalDate;
 import java.time.Month;
 
+/**
+ * Command for counting the elements of the collection with the specified birthday
+ */
 public class CountByBirthdayCommand extends Command {
     private final CollectionManager collectionManager;
     private LocalDate birthday;

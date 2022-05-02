@@ -8,22 +8,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Interface for checking whether a file with the specified path exists and is readable or writable
+ */
 public interface GetFile {
-    default boolean getReadableFile(String filename) throws NoFileException {
+    /**
+     * Method for checking
+     * @param filename String The filepath
+     * @throws NoFileException Thrown when the filepath is null, doesn't exist, is a directory, or is not readable
+     */
+    default void getReadableFile(String filename) throws NoFileException {
         try {
             Path path = Paths.get(filename);
             if (!Files.exists(path) | Files.isDirectory(path) | !Files.isReadable(path)) {
                 throw new NoFileException("This file doesn't exist or can't be accessed.");
             }
-            return true;
         } catch (NullPointerException e) {
-            return false;
+            throw new NoFileException();
         }
     }
 
+    /**
+     * Method for getting a writable file with the specified filepath
+     * @param filename The filepath
+     * @param defaultName The default filepath in case the first filepath doesn't result in a writable file
+     * @return File The resulting file
+     * @throws NoFileException Thrown when the file with the specified path can't be written into
+     */
     default File getWritableFile(String filename, String defaultName) throws NoFileException {
-        Path path = Paths.get(filename);
-        if (Files.exists(path) && (Files.isDirectory(path) | !Files.isWritable(path))) {
+        Path path;
+        if (filename != null) {
+            path = Paths.get(filename);
+        } else path = Paths.get(defaultName);
+        if (filename == null || (Files.exists(path) && (Files.isDirectory(path) | !Files.isWritable(path)))) {
             Path defaultPath = Paths.get(defaultName);
             if (Files.exists(defaultPath) && (Files.isDirectory(defaultPath) | !Files.isWritable(defaultPath))) {
                 throw new NoFileException("Can't create a writable file with this name.");

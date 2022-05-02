@@ -3,6 +3,9 @@ package app.commands;
 import app.utils.CollectionManager;
 import app.exceptions.WrongAmountOfArgumentsException;
 
+/**
+ * Command for shuffling the collection
+ */
 public class ShuffleCommand extends Command {
     private final CollectionManager collectionManager;
 
