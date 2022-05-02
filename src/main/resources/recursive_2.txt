@@ -1,0 +1,3 @@
+group
+execute src\main\resources\recursive_3.txt
+remove 1

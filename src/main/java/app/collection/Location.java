@@ -1,0 +1,36 @@
+package app.collection;
+
+public class Location {
+    private int x;
+    private Double y; //Поле не может быть null
+    private String name; //Поле не может быть null
+
+    public Location(){}
+
+    public Location(int x, Double y, String name) {
+        this.x = x;
+        this.y = y;
+        this.name = name;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public Double getY() {
+        return y;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "x = " + x + "; y = " + y.toString() + "; name: " + name;
+    }
+
+    public boolean check() {
+        return y != null && name != null;
+    }
+}

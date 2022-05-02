@@ -1,0 +1,2 @@
+shuffle
+execute src\main\resources\recursive_2.txt
