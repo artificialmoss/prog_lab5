@@ -33,6 +33,10 @@ public class Location {
         return "x = " + x + "; y = " + y.toString() + "; name: " + name;
     }
 
+    /**
+     * Checks whether the location meets the requirements
+     * @return boolean The result
+     */
     public boolean check() {
         return y != null && name != null;
     }

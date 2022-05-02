@@ -52,7 +52,7 @@ public class Person implements Comparable<Person> {
 
     /**
      * Checks whether the element's fields match their requirements
-     * @return boolean true if the requirements are satisfied
+     * @return boolean True if the requirements are satisfied, false otherwise
      */
     public boolean check() {
         return (id != null && id > 0) && (name != null && !name.trim().isEmpty()) && (coordinates!= null && coordinates.check()) &&
