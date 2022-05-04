@@ -1,10 +1,12 @@
 package app.commands;
 
-import app.collection.Person;
+import app.data.Person;
 import app.utils.CollectionManager;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.exceptions.WrongArgumentException;
 import app.utils.Mode;
+import app.utils.PersonReader;
+import app.utils.ResponseManager;
 
 /**
  * Command for updating the element of the collection with the specified id
@@ -14,11 +16,14 @@ public class UpdateByIdCommand extends Command {
     private Long id;
     private Person p;
     private final Mode mode;
+    private final PersonReader personReader;
+    private final ResponseManager responseManager = new ResponseManager();
 
-    public UpdateByIdCommand(CollectionManager collectionManager, Mode mode) {
+    public UpdateByIdCommand(CollectionManager collectionManager, Mode mode, PersonReader personReader) {
         super("update id", "update the element with the specified id");
         this.collectionManager = collectionManager;
         this.mode = mode;
+        this.personReader = personReader;
     }
 
     @Override
@@ -38,15 +43,11 @@ public class UpdateByIdCommand extends Command {
         }
         try {
             id = Long.parseLong(input[1]);
-            if (mode.getScriptMode()) {
-                p = collectionManager.readPersonFromScript(mode.getScanner(), id);
-            } else {
-                if (collectionManager.getById(id) != null) {
-                    System.out.println("Currently stored element with this id:\n" + collectionManager.getById(id).toString());
-                    System.out.println("Input the replacement:");
-                    p = collectionManager.readPerson(id);
-                } else p = null;
+            if (collectionManager.getById(id) != null) {
+                responseManager.showMessage("Currently stored element with this id:\n" + collectionManager.getById(id).toString(), !mode.getScriptMode());
+                responseManager.showMessage("Input the replacement: ", !mode.getScriptMode());
             }
+            p = personReader.readPerson(mode, id);
         } catch (NumberFormatException e) {
             throw new WrongArgumentException();
         }

@@ -1,11 +1,10 @@
 package app.commands;
 
-import app.collection.Person;
+import app.data.Person;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.Mode;
 import app.utils.CollectionManager;
-
-import java.util.Scanner;
+import app.utils.PersonReader;
 
 /**
  * Command for adding elements to the collection
@@ -14,16 +13,18 @@ public class AddCommand extends Command {
     private final CollectionManager collectionManager;
     private final Mode mode;
     private Person person;
+    private final PersonReader personReader;
 
     /**
      * Constructor
      * @param collectionManager CollectionManager the collection manager
      * @param mode Mode mode of the command manager
      */
-    public AddCommand(CollectionManager collectionManager, Mode mode) {
+    public AddCommand(CollectionManager collectionManager, Mode mode, PersonReader personReader) {
         super("add {element}", "add new element to the collection");
         this.collectionManager = collectionManager;
         this.mode = mode;
+        this.personReader = personReader;
     }
 
     @Override
@@ -38,13 +39,7 @@ public class AddCommand extends Command {
         if (input.length != 1) {
             throw new WrongAmountOfArgumentsException();
         }
-        boolean scriptMode = mode.getScriptMode();
-        if (scriptMode) {
-            Scanner s = mode.getScanner();
-            person = collectionManager.readPersonFromScript(s);
-        } else {
-            person = collectionManager.readPerson();
-        }
+        person = personReader.readPerson(mode, collectionManager.generateNextId());
         return this;
     }
 }

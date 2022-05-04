@@ -1,10 +1,11 @@
-package app.collection;
+package app.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Person – element of the collection that the application manages.
@@ -115,9 +116,11 @@ public class Person implements Comparable<Person> {
 
     @Override
     public String toString() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         return "Person:\n\tid: " + id.toString() + "\n\tname: " + name + "\n\tcoordinates: " + coordinates.toString()
-                + "\n\tcreation date: " + creationDate.toString() + "\n\theight: " + height.toString() + "\n\tbirthday: "
-                + ((birthday == null) ? "—" : birthday.toString()) + "\n\thair color: " + hairColor.toString()
+                + "\n\tcreation date: " + creationDate.format(formatter) + "\n\theight: " + height.toString() + "\n\tbirthday: "
+                + ((birthday == null) ? "—" : birthday.format(formatter)) + "\n\thair color: " + hairColor.toString()
                 + "\n\tnationality: " + ((nationality == null) ? "—": nationality.toString()) + "\n\tlocation: " + location.toString();
     }
 }

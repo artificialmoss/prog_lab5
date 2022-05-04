@@ -1,20 +1,20 @@
 package app.utils;
 
-import app.collection.Person;
+import app.data.Person;
 import app.exceptions.FullCollectionException;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
  * Class that manages the collection
  */
-public class CollectionManager implements ReadPersonFromScript {
+public class CollectionManager {
     private Vector<Person> collection;
     private final ZonedDateTime initializationDate;
     private Long nextId = 1L;
-    private final PersonReader personReader = new PersonReader(3);
 
     /**
      * Constructor, creates an empty collection and sets initialization date
@@ -25,7 +25,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for getting the element with the specified id
+     * Gets the element with the specified id
      * @param id Long id
      * @return Person The element with the specified id or null if it doesn't exist
      */
@@ -39,10 +39,12 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for generating free id for the new element of the collection
-     * @throws FullCollectionException Thrown when all available ids are taken
+     * Generates an available id
+     * @return Long the next available id
+     * @throws FullCollectionException Thrown when a new id can't be generated
      */
-    public void generateNextId() throws FullCollectionException {
+    public Long generateNextId() throws FullCollectionException {
+        nextId = (getMaxId().equals(Long.MAX_VALUE)) ? 1L : getMaxId() + 1;
         Long start = nextId;
         while (getById(nextId) != null) {
             nextId = (nextId.equals(Long.MAX_VALUE)) ? 1L : nextId + 1;
@@ -50,10 +52,21 @@ public class CollectionManager implements ReadPersonFromScript {
                 throw new FullCollectionException("The collection is full. New id cannot be generated.");
             }
         }
+        return nextId;
+    }
+
+    private Long getMaxId() {
+        Long id = 0L;
+        for (Person p: collection) {
+            if (p.getId() > id) {
+                id = p.getId();
+            }
+        }
+        return id;
     }
 
     /**
-     * Method for adding a new element
+     * Adds a new element
      * @param p Person Element to add
      * @return String Result
      */
@@ -68,7 +81,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for removing the element with the specified id from the collection
+     * Removes the element with the specified id from the collection
      * @param id Long id
      * @return String Result
      */
@@ -85,7 +98,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for clearing the collection
+     * Clears the collection
      * @return String Result
      */
     public String clear() {
@@ -95,7 +108,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Methods for showing the contents of the collection
+     * Shows the contents of the collection
      * @return String Result
      */
     public String show() {
@@ -112,7 +125,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for replacing an element with the specified id with another one
+     * Replaces the element with the specified id with another one
      * @param id Long id
      * @param p Person The replacement
      */
@@ -127,7 +140,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for getting the current size of the collection
+     * Returns the current size of the collection
      * @return int Number of elements
      */
     public int getSize() {
@@ -135,31 +148,32 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for getting the type of the collection
+     * Returns the type of the collection
      * @return String Type
      */
     public String getType() {
-        return "Vector";
+        return collection.getClass().getSimpleName();
     }
 
     /**
-     * Method for getting the date the collection has been initialized in String format
+     * Returns the date the collection has been initialized in String format
      * @return String date
      */
     public String getDate() {
-        return initializationDate.toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        return initializationDate.format(formatter);
     }
 
     /**
-     * Method for getting the element type
+     * Returns the element type
      * @return String the element type
      */
     public String getElementType() {
-        return "Person";
+        return Person.class.getSimpleName();
     }
 
     /**
-     * Method for getting the maximal element of the collection according to the elements' natural order
+     * Returns the maximal element of the collection according to the elements' natural order
      * @return Person The maximal element
      */
     public Person getMax() {
@@ -177,7 +191,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for getting the minimal element of the collection according to the elements' natural order
+     * Returns the minimal element of the collection according to the elements' natural order
      * @return Person The minimal element
      */
     public Person getMin() {
@@ -195,7 +209,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for grouping the elements by their height and showing the size of each group
+     * Groups the elements by their height and showing the size of each group
      * @return String Result
      */
     public String groupByHeight() {
@@ -217,7 +231,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for getting a list of birthdays of all elements stored in the collection
+     * Returns a list of birthdays of all elements stored in the collection
      * @return String Result
      */
     public String descendingBirthdays() {
@@ -232,7 +246,7 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for counting all elements with the specified birthday
+     * Counts all elements with the specified birthday
      * @param birthday LocalDate Birthday
      * @return String Result
      */
@@ -247,41 +261,14 @@ public class CollectionManager implements ReadPersonFromScript {
     }
 
     /**
-     * Method for shuffling the collection
+     * Shuffles the collection
      */
     public void shuffle() {
         Collections.shuffle(collection);
     }
 
     /**
-     * Method for reading an element from console
-     * @return Person The resulting element
-     */
-    public Person readPerson() {
-        generateNextId();
-        return personReader.readPerson(nextId);
-    }
-
-    /**
-     * Method for reading an element with the specified id from console
-     * @param id Long id
-     * @return Person The resulting element
-     */
-    public Person readPerson(Long id) {
-        return personReader.readPerson(id);
-    }
-
-    /**
-     * Method for reading an element from console
-     * @return Person The resulting element
-     */
-    public Person readPersonFromScript(Scanner s) {
-        generateNextId();
-        return readPersonFromScript(s, nextId);
-    }
-
-    /**
-     * Method for removing elements of the collection that don't meet the requirements for them
+     * Removes elements of the collection that don't meet the requirements
      */
     public void checkAndRemove() {
         Set<Long> ids = new HashSet<>();

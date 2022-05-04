@@ -1,5 +1,5 @@
 app
-app.collection
 app.commands
+app.data
 app.exceptions
 app.utils

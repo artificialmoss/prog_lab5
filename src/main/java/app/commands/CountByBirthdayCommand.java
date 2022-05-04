@@ -1,6 +1,5 @@
 package app.commands;
 
-import app.exceptions.NonexistentDateException;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.exceptions.WrongArgumentException;
 import app.utils.CollectionManager;
@@ -32,16 +31,16 @@ public class CountByBirthdayCommand extends Command {
                 int day = Integer.parseInt(input[1]);
                 int month = Integer.parseInt(input[2]);
                 int year = Integer.parseInt(input[3]);
-                if ((year < LocalDate.MIN.getYear() || year > LocalDate.now().getYear()) ||
+                if ((year < LocalDate.MIN.getYear() || year > LocalDate.MAX.getYear()) ||
                         (month < 1 || month > 12)) {
-                    throw new NonexistentDateException("This date doesn't exist.");
+                    throw new WrongArgumentException("This date doesn't exist.");
                 }
                 int maxDay = Month.of(month).length(LocalDate.of(year, month, 1).isLeapYear());
                 if (day < 1 || day > maxDay) {
-                    throw new NonexistentDateException("This date doesn't exist.");
+                    throw new WrongArgumentException("This date doesn't exist.");
                 }
                 birthday = LocalDate.of(year, month, day);
-            } catch (NumberFormatException | NonexistentDateException e) {
+            } catch (NumberFormatException e) {
                 throw new WrongArgumentException(e);
             }
         } else {

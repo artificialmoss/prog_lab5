@@ -13,7 +13,7 @@ import java.nio.file.Paths;
  */
 public interface GetFile {
     /**
-     * Method for checking
+     * Checks whether a file is readable
      * @param filename String The filepath
      * @throws NoFileException Thrown when the filepath is null, doesn't exist, is a directory, or is not readable
      */
@@ -29,7 +29,7 @@ public interface GetFile {
     }
 
     /**
-     * Method for getting a writable file with the specified filepath
+     * Gets a writable file with the specified filepath
      * @param filename The filepath
      * @param defaultName The default filepath in case the first filepath doesn't result in a writable file
      * @return File The resulting file

@@ -1,10 +1,9 @@
 package app.commands;
 
-import app.collection.Person;
 import app.utils.CollectionManager;
 import app.exceptions.WrongAmountOfArgumentsException;
 
-import java.lang.reflect.Field;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Command that provides basic information about the collection (its type, size, initialization date, element size and element fields)
@@ -19,16 +18,11 @@ public class InfoCommand extends Command {
 
     @Override
     public String execute(boolean scriptMode) {
-        Field[] elementFields = Person.class.getDeclaredFields();
-        String[] fieldNames = new String[elementFields.length];
-        for (int i = 0; i < elementFields.length; i++) {
-            fieldNames[i] = elementFields[i].getName();
-        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return "Collection type: " + collectionManager.getType() + "\n" +
                 "Element type: " + collectionManager.getElementType() + "\n" +
                 "Collection size: " + collectionManager.getSize() + "\n" +
-                "Initialization date: " + collectionManager.getDate() +"\n" +
-                "Element characteristics: " + String.join(", ", fieldNames) + "\n";
+                "Initialization date: " + collectionManager.getDate() +"\n";
     }
 
     @Override

@@ -13,11 +13,13 @@ import java.util.*;
  */
 public class CommandManager {
     private final CollectionManager collectionManager;
-    private final Stack<String> scriptHistory = new Stack<>();
+    private final Deque<String> scriptHistory = new ArrayDeque<>();
     private final Mode mode;
     private final String filepath;
     private final JsonParser parser;
     private final Map<String, Command> commandMap = new HashMap<>();
+    private final ResponseManager responseManager = new ResponseManager();
+    private final PersonReader personReader = new PersonReader(3);
 
     /**
      * Constructor, initializes the collection stored in the file specified by filepath
@@ -40,21 +42,21 @@ public class CommandManager {
     }
 
     /**
-     * Method for initializing all commands
+     * Initializes map with all available commands
      */
     public void initializeCommandMap() {
         commandMap.put("help", new HelpCommand(commandMap));
         commandMap.put("info", new InfoCommand(collectionManager));
         commandMap.put("show", new ShowCommand(collectionManager));
-        commandMap.put("add", new AddCommand(collectionManager, mode));
-        commandMap.put("update", new UpdateByIdCommand(collectionManager, mode));
+        commandMap.put("add", new AddCommand(collectionManager, mode, personReader));
+        commandMap.put("update", new UpdateByIdCommand(collectionManager, mode, personReader));
         commandMap.put("remove", new RemoveByIdCommand(collectionManager));
         commandMap.put("clear", new ClearCommand(collectionManager));
         commandMap.put("save", new SaveCommand(collectionManager, parser, filepath));
         commandMap.put("exit", new ExitCommand());
         commandMap.put("execute", new ExecuteScriptCommand(this));
-        commandMap.put("add_if_max", new AddIfMaxCommand(collectionManager, mode));
-        commandMap.put("add_if_min", new AddIfMinCommand(collectionManager, mode));
+        commandMap.put("add_if_max", new AddIfMaxCommand(collectionManager, mode, personReader));
+        commandMap.put("add_if_min", new AddIfMinCommand(collectionManager, mode, personReader));
         commandMap.put("shuffle", new ShuffleCommand(collectionManager));
         commandMap.put("count_by_birthday", new CountByBirthdayCommand(collectionManager));
         commandMap.put("print_birthdays", new PrintBirthdaysCommand(collectionManager));
@@ -62,7 +64,7 @@ public class CommandManager {
     }
 
     /**
-     * Method for executing a command
+     * Executes the command
      * @param s String Command and arguments
      * @return String The result
      * @throws ScriptErrorException Thrown when the mistake in the script is encountered
@@ -72,27 +74,18 @@ public class CommandManager {
             Command c = getCommand(s).setArgs(s);
             return c.execute(getScriptMode());
         } catch (NoScriptException e) {
-            if (!getScriptMode()) return "This script doesn't exist or can't be accessed.";
-            else throw new ScriptErrorException();
+            return responseManager.sendErrorMessage("This script doesn't exist or can't be accessed.", !getScriptMode(), true);
         } catch (NoCommandException e) {
-            if (!getScriptMode()) return "No such command, try again";
-            return null;
+            return responseManager.sendErrorMessage("No command, try again", !getScriptMode(), false);
         } catch (WrongCommandException e) {
-            if (getScriptMode()) {
-                throw new ScriptErrorException();
-            }
-            if (!getScriptMode()) return "No such command, try again.";
+            return responseManager.sendErrorMessage("No such command, try again.", !getScriptMode(), true);
         } catch (WrongAmountOfArgumentsException | WrongArgumentException e) {
-            if (getScriptMode()) {
-                throw new ScriptErrorException();
-            }
-            if (!getScriptMode()) return "Wrong arguments, try again.";
+            return responseManager.sendErrorMessage("Wrong arguments, try again.", !getScriptMode(), true);
         }
-        return null;
     }
 
     /**
-     * Method for matching an input line with the corresponding command
+     * Matches the input line with the corresponding command
      * @param s String[] Input line, split by whitespace characters
      * @return Command The corresponding commands
      * @throws NoCommandException When the input is empty
@@ -110,20 +103,17 @@ public class CommandManager {
     }
 
     /**
-     * Method for running the process of command executing
+     * Runs the process of command execution
      */
     public void run() {
         while (true) {
-            if (!getScriptMode()) {
-                System.out.print("$ ");
-            }
+            responseManager.showPrompt("$ ", !getScriptMode());
             if (getScanner().hasNextLine()) {
                 String[] command = getScanner().nextLine().trim().split("[\\s]+");
-                String res = execute(command);
-                if (res != null) System.out.println(res);
+                responseManager.showMessage(execute(command));
             } else {
                 if (!getScriptMode()) {
-                    System.out.println("\nYou have entered the end of file symbol. The collection will be saved and the application will be closed.");
+                    responseManager.showMessage("\nYou have entered the end of file symbol. The collection will be saved and the application will be closed.");
                     collectionManager.save(parser, filepath);
                 }
                 return;
@@ -132,7 +122,7 @@ public class CommandManager {
     }
 
     /**
-     * Method for adding a script to the script history and setting the mode of the command manager for its execution
+     * Adds a script to the script history, sets the mode of the command manager for its execution
      * @param file File The script file
      * @throws FileNotFoundException Thrown when the process of reading the script encounters an unexpected input error
      */
@@ -152,7 +142,7 @@ public class CommandManager {
     }
 
     /**
-     * Method for removing the script from the script history and adjusting the mode of the command manager for further work
+     * Removes the script from the script history, adjusts the mode of the command manager for further work
      * @param prevScanner Scanner Scanner that was used before the execution of the script
      */
     public void removeScript(Scanner prevScanner) {
@@ -168,24 +158,27 @@ public class CommandManager {
     }
 
     /**
-     * Method for getting the last (most recent) element of the script history
+     * Gets the last (most recent) element of the script history
      * @return String The canonical path of the last script in the script history
      */
-    public String peek() {
-        return scriptHistory.peek();
+    public String peekLast() {
+        return scriptHistory.peekLast();
     }
 
     /**
-     * Method for clearing the script history
-     * @return String The first (the oldest) element of the script history
+     * Returns the first (the oldest) element of the script history
+     * @return String The canonical path of the first script in the script history
      */
-    public String clearScriptHistory() {
-        String filename = null;
-        while (!scriptHistory.empty()) {
-            filename = scriptHistory.pop();
-        }
+    public String peekFirst() {
+        return scriptHistory.peekFirst();
+    }
+
+    /**
+     * Clears the script history
+     */
+    public void clearScriptHistory() {
+        scriptHistory.clear();
         mode.setScanner(new Scanner(System.in));
         mode.setScriptMode(false);
-        return filename;
     }
 }

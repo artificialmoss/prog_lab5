@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import app.collection.Person;
+import app.data.Person;
 import app.exceptions.CannotInitializeCollectionException;
 import app.exceptions.NoFileException;
 
@@ -19,7 +19,7 @@ public class JsonParser implements GetFile {
     private final ObjectMapper mapper = new ObjectMapper();
 
     /**
-     * Method for parsing a json string into a collection
+     * Parses a json string into a collection
      * @param json String Json string
      * @return CollectionManager Collection manager that manages the collection stored in json string
      * @throws CannotInitializeCollectionException Thrown when the collection can't be initialized
@@ -36,7 +36,7 @@ public class JsonParser implements GetFile {
     }
 
     /**
-     * Method for converting a collection into a json string
+     * Converts a collection into a json string
      * @param collection {@literal Vector<Person>} The collection
      * @return String The resulting string
      * @throws JsonProcessingException Thrown when the collection can't be processed into json
@@ -48,7 +48,7 @@ public class JsonParser implements GetFile {
     }
 
     /**
-     * Method for converting the contents of the file into a string
+     * Converts the contents of the file into a string
      * @param filename String The filepath
      * @return String The resulting string
      */
@@ -70,7 +70,7 @@ public class JsonParser implements GetFile {
     }
 
     /**
-     * Method for writing a string to a file
+     * Writes a string to a file
      * @param filename The filepath
      * @param defaultName The default filepath in case the first one doesn't result in a writable file
      * @param s String The string
@@ -90,7 +90,7 @@ public class JsonParser implements GetFile {
     }
 
     /**
-     * Method for converting a json file into a collection
+     * Converts a json file into a collection
      * @param filename String The filepath
      * @return CollectionManager Collection manager for the resulting collection
      */
@@ -105,7 +105,7 @@ public class JsonParser implements GetFile {
     }
 
     /**
-     * Method for saving the collection to a file in a json format
+     * Saves the collection to a file in json format
      * @param filename String The filepath
      * @param defaultName String The second filepath in case the first one doesn't result in a writable file
      * @param collection {@literal Vector<Person>} The collection

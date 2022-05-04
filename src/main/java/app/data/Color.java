@@ -1,8 +1,8 @@
-package app.collection;
+package app.data;
 
 /**
  * Color (used for hair color in Person).
- * @see app.collection.Person
+ * @see app.data.Person
  */
 public enum Color {
     RED,

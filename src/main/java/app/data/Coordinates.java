@@ -1,4 +1,4 @@
-package app.collection;
+package app.data;
 
 /**
  * Class for coordinates (double x, float y).

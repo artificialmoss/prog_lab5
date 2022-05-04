@@ -1,4 +1,4 @@
-package app.collection;
+package app.data;
 
 /**
  * Enum for country options.

@@ -31,16 +31,17 @@ public class ExecuteScriptCommand extends Command {
         try {
             commandManager.addScript(file);
             commandManager.run();
-            file = new File(commandManager.peek());
+            file = new File(commandManager.peekLast());
             commandManager.removeScript(curScanner);
         } catch (RecursiveScriptException e) {
-            file = new File(commandManager.clearScriptHistory());
+            file = new File(commandManager.peekFirst());
+            commandManager.clearScriptHistory();
             return file.getAbsolutePath() + " contains recursion and can't be executed. All commands before the recursive call have been executed.";
         } catch (FileNotFoundException e) {
             if (scriptMode) throw new ScriptErrorException();
             return "File not found.";
         } catch (ScriptErrorException e) {
-            file = new File(commandManager.peek());
+            file = new File(commandManager.peekLast());
             commandManager.removeScript(curScanner);
             if (scriptMode) throw new ScriptErrorException();
             return file.getAbsolutePath() + " contains a mistake. All commands before the mistake have been executed.";

@@ -1,11 +1,10 @@
 package app.commands;
 
-import app.collection.Person;
+import app.data.Person;
 import app.utils.CollectionManager;
 import app.exceptions.WrongAmountOfArgumentsException;
 import app.utils.Mode;
-
-import java.util.Scanner;
+import app.utils.PersonReader;
 
 /**
  * Command for adding the element to the collection if it is smaller than the current minimal element of the collection, according to the elemen't natural order
@@ -14,11 +13,13 @@ public class AddIfMinCommand extends Command {
     private final CollectionManager collectionManager;
     private Person person;
     private final Mode mode;
+    private final PersonReader personReader;
 
-    public AddIfMinCommand(CollectionManager collectionManager, Mode mode) {
+    public AddIfMinCommand(CollectionManager collectionManager, Mode mode, PersonReader personReader) {
         super("add_if_min {element}", "add element to the collection if it's smaller than the minimal element of the collection");
         this.collectionManager = collectionManager;
         this.mode = mode;
+        this.personReader = personReader;
     }
 
     @Override
@@ -36,13 +37,7 @@ public class AddIfMinCommand extends Command {
         if (input.length != 1) {
             throw new WrongAmountOfArgumentsException();
         }
-        boolean scriptMode = mode.getScriptMode();
-        if (scriptMode) {
-            Scanner s = mode.getScanner();
-            person = collectionManager.readPersonFromScript(s);
-        } else {
-            person = collectionManager.readPerson();
-        }
+        person = personReader.readPerson(mode, collectionManager.generateNextId());
         return this;
     }
 }
