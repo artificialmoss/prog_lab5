@@ -15,7 +15,6 @@ public class CommandManager {
     private final CollectionManager collectionManager;
     private final Deque<String> scriptHistory = new ArrayDeque<>();
     private final Mode mode;
-    private final String filepath;
     private final JsonParser parser;
     private final Map<String, Command> commandMap = new HashMap<>();
     private final ResponseManager responseManager = new ResponseManager();
@@ -23,13 +22,12 @@ public class CommandManager {
 
     /**
      * Constructor, initializes the collection stored in the file specified by filepath
-     * @param filepath String Filepath
+     * @param filepath Filepath
      */
     public CommandManager(String filepath) {
         mode = new Mode();
-        parser = new JsonParser();
-        this.filepath = filepath;
-        this.collectionManager = parser.fileToCollection(filepath);
+        parser = new JsonParser(filepath, "saved_collection_default.json");
+        this.collectionManager = parser.fileToCollection();
         initializeCommandMap();
     }
 
@@ -52,7 +50,7 @@ public class CommandManager {
         commandMap.put("update", new UpdateByIdCommand(collectionManager, mode, personReader));
         commandMap.put("remove", new RemoveByIdCommand(collectionManager));
         commandMap.put("clear", new ClearCommand(collectionManager));
-        commandMap.put("save", new SaveCommand(collectionManager, parser, filepath));
+        commandMap.put("save", new SaveCommand(collectionManager, parser));
         commandMap.put("exit", new ExitCommand());
         commandMap.put("execute", new ExecuteScriptCommand(this));
         commandMap.put("add_if_max", new AddIfMaxCommand(collectionManager, mode, personReader));
@@ -65,8 +63,8 @@ public class CommandManager {
 
     /**
      * Executes the command
-     * @param s String Command and arguments
-     * @return String The result
+     * @param s Command and arguments
+     * @return The result
      * @throws ScriptErrorException Thrown when the mistake in the script is encountered
      */
     public String execute(String[] s) throws ScriptErrorException {
@@ -86,17 +84,17 @@ public class CommandManager {
 
     /**
      * Matches the input line with the corresponding command
-     * @param s String[] Input line, split by whitespace characters
-     * @return Command The corresponding commands
-     * @throws NoCommandException When the input is empty
-     * @throws WrongCommandException When the input is not empty and doesn't correspond to any command
+     * @param s Input line, split by whitespace characters
+     * @return The corresponding commands
+     * @throws NoCommandException Thrown when the input is empty
+     * @throws WrongCommandException Thrown when the input is not empty and doesn't correspond to any command
      */
     public Command getCommand(String[] s) throws NoCommandException, WrongCommandException {
         if (s.length == 0) {
             throw new NoCommandException();
         }
         String commandName = s[0].trim().toLowerCase();
-        if (s[0].trim().isEmpty()) throw new NoCommandException();
+        if (commandName.isEmpty()) throw new NoCommandException();
         if (commandMap.containsKey(commandName)) {
             return commandMap.get(commandName);
         } else throw new WrongCommandException();
@@ -107,14 +105,14 @@ public class CommandManager {
      */
     public void run() {
         while (true) {
-            responseManager.showPrompt("$ ", !getScriptMode());
+            responseManager.showMessage("$ ", !getScriptMode());
             if (getScanner().hasNextLine()) {
-                String[] command = getScanner().nextLine().trim().split("[\\s]+");
-                responseManager.showMessage(execute(command));
+                String[] command = getScanner().nextLine().trim().split("\\s+");
+                responseManager.showResponse(execute(command));
             } else {
                 if (!getScriptMode()) {
-                    responseManager.showMessage("\nYou have entered the end of file symbol. The collection will be saved and the application will be closed.");
-                    collectionManager.save(parser, filepath);
+                    responseManager.showResponse("\nYou have entered the end of file symbol. The collection will be saved and the application will be closed.");
+                    collectionManager.save(parser);
                 }
                 return;
             }
@@ -123,7 +121,7 @@ public class CommandManager {
 
     /**
      * Adds a script to the script history, sets the mode of the command manager for its execution
-     * @param file File The script file
+     * @param file The script file
      * @throws FileNotFoundException Thrown when the process of reading the script encounters an unexpected input error
      */
     public void addScript(File file) throws FileNotFoundException {
@@ -143,7 +141,7 @@ public class CommandManager {
 
     /**
      * Removes the script from the script history, adjusts the mode of the command manager for further work
-     * @param prevScanner Scanner Scanner that was used before the execution of the script
+     * @param prevScanner Scanner that was used before the execution of the script
      */
     public void removeScript(Scanner prevScanner) {
         scriptHistory.pop();
@@ -158,8 +156,8 @@ public class CommandManager {
     }
 
     /**
-     * Gets the last (most recent) element of the script history
-     * @return String The canonical path of the last script in the script history
+     * Returns the last (most recent) element of the script history
+     * @return The canonical path of the last script in the script history
      */
     public String peekLast() {
         return scriptHistory.peekLast();
@@ -167,7 +165,7 @@ public class CommandManager {
 
     /**
      * Returns the first (the oldest) element of the script history
-     * @return String The canonical path of the first script in the script history
+     * @return The canonical path of the first script in the script history
      */
     public String peekFirst() {
         return scriptHistory.peekFirst();

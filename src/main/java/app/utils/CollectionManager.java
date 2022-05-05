@@ -26,8 +26,8 @@ public class CollectionManager {
 
     /**
      * Gets the element with the specified id
-     * @param id Long id
-     * @return Person The element with the specified id or null if it doesn't exist
+     * @param id id
+     * @return The element with the specified id or null if it doesn't exist
      */
     public Person getById(Long id) {
         for (Person p : collection) {
@@ -40,7 +40,7 @@ public class CollectionManager {
 
     /**
      * Generates an available id
-     * @return Long the next available id
+     * @return the next available id
      * @throws FullCollectionException Thrown when a new id can't be generated
      */
     public Long generateNextId() throws FullCollectionException {
@@ -67,8 +67,8 @@ public class CollectionManager {
 
     /**
      * Adds a new element
-     * @param p Person Element to add
-     * @return String Result
+     * @param p Element to add
+     * @return Result
      */
     public String add(Person p) {
         Long id = p.getId();
@@ -82,8 +82,8 @@ public class CollectionManager {
 
     /**
      * Removes the element with the specified id from the collection
-     * @param id Long id
-     * @return String Result
+     * @param id id
+     * @return Result
      */
     public String removeById(Long id) {
         Iterator<Person> i = collection.iterator();
@@ -99,7 +99,7 @@ public class CollectionManager {
 
     /**
      * Clears the collection
-     * @return String Result
+     * @return Result
      */
     public String clear() {
         if (getSize() == 0) return "The collection is already empty.";
@@ -109,7 +109,7 @@ public class CollectionManager {
 
     /**
      * Shows the contents of the collection
-     * @return String Result
+     * @return Result
      */
     public String show() {
         int length = collection.size();
@@ -126,8 +126,8 @@ public class CollectionManager {
 
     /**
      * Replaces the element with the specified id with another one
-     * @param id Long id
-     * @param p Person The replacement
+     * @param id id
+     * @param p The replacement
      */
     public void updateById(Long id, Person p) {
         int length = collection.size();
@@ -141,7 +141,7 @@ public class CollectionManager {
 
     /**
      * Returns the current size of the collection
-     * @return int Number of elements
+     * @return Number of elements
      */
     public int getSize() {
         return collection.size();
@@ -149,7 +149,7 @@ public class CollectionManager {
 
     /**
      * Returns the type of the collection
-     * @return String Type
+     * @return Type
      */
     public String getType() {
         return collection.getClass().getSimpleName();
@@ -157,7 +157,7 @@ public class CollectionManager {
 
     /**
      * Returns the date the collection has been initialized in String format
-     * @return String date
+     * @return The date
      */
     public String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
@@ -166,7 +166,7 @@ public class CollectionManager {
 
     /**
      * Returns the element type
-     * @return String the element type
+     * @return the element type
      */
     public String getElementType() {
         return Person.class.getSimpleName();
@@ -174,7 +174,7 @@ public class CollectionManager {
 
     /**
      * Returns the maximal element of the collection according to the elements' natural order
-     * @return Person The maximal element
+     * @return The maximal element
      */
     public Person getMax() {
         int length = collection.size();
@@ -192,7 +192,7 @@ public class CollectionManager {
 
     /**
      * Returns the minimal element of the collection according to the elements' natural order
-     * @return Person The minimal element
+     * @return The minimal element
      */
     public Person getMin() {
         int length = collection.size();
@@ -210,7 +210,7 @@ public class CollectionManager {
 
     /**
      * Groups the elements by their height and showing the size of each group
-     * @return String Result
+     * @return Result
      */
     public String groupByHeight() {
         HashMap<Long, HashSet<Person>> groups = new HashMap<>();
@@ -232,7 +232,7 @@ public class CollectionManager {
 
     /**
      * Returns a list of birthdays of all elements stored in the collection
-     * @return String Result
+     * @return Result
      */
     public String descendingBirthdays() {
         TreeSet<LocalDate> birthdays = new TreeSet<>();
@@ -247,8 +247,8 @@ public class CollectionManager {
 
     /**
      * Counts all elements with the specified birthday
-     * @param birthday LocalDate Birthday
-     * @return String Result
+     * @param birthday Birthday
+     * @return Result
      */
     public String countBirthday(LocalDate birthday) {
         int count = 0;
@@ -285,8 +285,8 @@ public class CollectionManager {
 
     /**
      * Method for initializing a collection
-     * @param collection Vector&lt;Person&gt; Collection
-     * @return CollectionManager The resulting CollectionManager
+     * @param collection Collection
+     * @return The resulting CollectionManager
      */
     public CollectionManager initializeCollection(Vector<Person> collection) {
         if (collection != null) {
@@ -298,12 +298,10 @@ public class CollectionManager {
 
     /**
      * Method for saving the collection to a file in json format
-     * @param parser JsonParser Parser
-     * @param filepath Filepath Filepath
-     * @return String Result
+     * @param parser Parser
+     * @return Result
      */
-    public String save(JsonParser parser, String filepath) {
-        String defaultFilepath = "saved_collection_default.json";
-        return parser.writeCollectionToFile(filepath, defaultFilepath, collection);
+    public String save(JsonParser parser) {
+        return parser.writeCollectionToFile(collection);
     }
 }

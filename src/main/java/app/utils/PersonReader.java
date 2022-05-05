@@ -22,7 +22,7 @@ public class PersonReader {
 
     /**
      * Constructor
-     * @param maxErrorCount int The maximal number of mistakes for each field allowed
+     * @param maxErrorCount The maximal number of mistakes for each field allowed
      */
     public PersonReader(int maxErrorCount) {
         this.MAX_ERROR_COUNT = maxErrorCount;
@@ -32,7 +32,7 @@ public class PersonReader {
                             boolean nullAllowed) throws WrongArgumentException, NullElementException {
         int errorCount = 0;
         T res;
-        responseManager.showPrompt(inputPrompt + " (" + requirements + "): ");
+        responseManager.showMessage(inputPrompt + " (" + requirements + "): ");
         while (errorCount != MAX_ERROR_COUNT) {
             String input = s.nextLine().trim();
             if (input.isEmpty() && nullAllowed) {
@@ -45,12 +45,12 @@ public class PersonReader {
                 } else {
                     errorCount++;
                     if (errorCount != MAX_ERROR_COUNT)
-                        responseManager.showPrompt("Invalid argument (" + requirements + "), try again: ");
+                        responseManager.showMessage("Invalid argument (" + requirements + "), try again: ");
                 }
             } catch (IllegalArgumentException e) {
                 errorCount++;
                 if (errorCount != MAX_ERROR_COUNT)
-                    responseManager.showPrompt("Invalid argument (" + requirements + "), try again: ");
+                    responseManager.showMessage("Invalid argument (" + requirements + "), try again: ");
             }
         }
         throw new WrongArgumentException();
@@ -137,15 +137,15 @@ public class PersonReader {
         String yInputPrompt = "Type the second coordinate";
         String yRequirements = "must be a decimal";
         Double y = readValue(yInputPrompt, yRequirements, Double::parseDouble, s -> true, false);
-        responseManager.showPrompt("Type their location name (can be blank): ");
+        responseManager.showMessage("Type their location name (can be blank): ");
         String name = s.nextLine();
         return new Location(x, y, name);
     }
 
-    private Person readPersonFromConsole(Mode mode, Long id) throws WrongArgumentException {
+    public Person readPersonFromConsole(Mode mode, Long id) throws WrongArgumentException {
         s = mode.getScanner();
         try {
-            responseManager.showMessage("You've got " + MAX_ERROR_COUNT + " tries for each input parameter, if you fail all of them, you will need to call your command again. " +
+            responseManager.showResponse("You've got " + MAX_ERROR_COUNT + " tries for each input parameter, if you fail all of them, you will need to call your command again. " +
                     "Some parameters (birthday, nationality) can be unspecified, the location name can be blank.");
             String name = readName();
             Coordinates coordinates = readCoordinates();
@@ -160,7 +160,7 @@ public class PersonReader {
         }
     }
 
-    public <T> T readValueFromScript(Function<String, T> parseValue, Predicate<T> checkValue, boolean nullAllowed)
+    private <T> T readValueFromScript(Function<String, T> parseValue, Predicate<T> checkValue, boolean nullAllowed)
         throws WrongArgumentException, NullElementException {
         T res;
         String input = s.nextLine().trim();
@@ -230,7 +230,7 @@ public class PersonReader {
         return new Location(x, y, name);
     }
 
-    private Person readPersonFromScript(Mode mode, Long id) throws WrongArgumentException {
+    public Person readPersonFromScript(Mode mode, Long id) throws WrongArgumentException {
         s = mode.getScanner();
         String name = readNameFromScript();
         Coordinates coordinates = readCoordinatesFromScript();
@@ -244,9 +244,9 @@ public class PersonReader {
 
     /**
      * Reads the element either from the console or the script depending on the current mode
-     * @param mode Mode The current mode of the command manager
-     * @param id Long The id of the element
-     * @return Person The resulting element
+     * @param mode The current mode of the command manager
+     * @param id The id of the element
+     * @return The resulting element
      */
     public Person readPerson(Mode mode, Long id) {
         if (mode.getScriptMode()) {

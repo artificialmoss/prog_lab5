@@ -35,7 +35,7 @@ public class Location {
 
     /**
      * Checks whether the location meets the requirements
-     * @return boolean The result
+     * @return The result
      */
     public boolean check() {
         return y != null && name != null;

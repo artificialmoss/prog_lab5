@@ -43,11 +43,15 @@ public class UpdateByIdCommand extends Command {
         }
         try {
             id = Long.parseLong(input[1]);
-            if (collectionManager.getById(id) != null) {
-                responseManager.showMessage("Currently stored element with this id:\n" + collectionManager.getById(id).toString(), !mode.getScriptMode());
-                responseManager.showMessage("Input the replacement: ", !mode.getScriptMode());
+            if (mode.getScriptMode()) {
+                p = personReader.readPersonFromScript(mode, id);
+            } else {
+                if (collectionManager.getById(id) != null) {
+                    responseManager.showResponse("Currently stored element with this id:\n" + collectionManager.getById(id).toString(), !mode.getScriptMode());
+                    responseManager.showResponse("Input the replacement: ", !mode.getScriptMode());
+                    p = personReader.readPersonFromConsole(mode, id);
+                } else p = null;
             }
-            p = personReader.readPerson(mode, id);
         } catch (NumberFormatException e) {
             throw new WrongArgumentException();
         }

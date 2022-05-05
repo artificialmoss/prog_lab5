@@ -10,19 +10,17 @@ import app.utils.JsonParser;
  */
 public class SaveCommand extends Command {
     private CollectionManager collectionManager;
-    private String filepath;
     private JsonParser parser;
 
-    public SaveCommand(CollectionManager collectionManager, JsonParser parser, String filepath) {
+    public SaveCommand(CollectionManager collectionManager, JsonParser parser) {
         super("save" , "save the collection to file");
         this.collectionManager = collectionManager;
-        this.filepath = filepath;
         this.parser = parser;
     }
 
     @Override
     public String execute(boolean scriptMode) {
-        String res = collectionManager.save(parser, filepath);
+        String res = collectionManager.save(parser);
         if (!scriptMode) return res;
         return null;
     }

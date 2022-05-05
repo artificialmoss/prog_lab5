@@ -29,7 +29,7 @@ public class Coordinates {
 
     /**
      * Checks whether the coordinates meet the requirements
-     * @return boolean The result
+     * @return The result
      */
     public boolean check() {
         return x <= 212 && y != null;

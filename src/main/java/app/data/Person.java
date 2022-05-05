@@ -28,14 +28,14 @@ public class Person implements Comparable<Person> {
 
     /**
      * Constructor.
-     * @param id Long id of
-     * @param name String name
-     * @param coordinates Coordinates coordinates
-     * @param height Long height
-     * @param birthday LocalDateTime date and time of birth
-     * @param hairColor Color hair color
-     * @param nationality Country nationality
-     * @param location Location locatiob
+     * @param id id of
+     * @param name name
+     * @param coordinates coordinates
+     * @param height height
+     * @param birthday date and time of birth
+     * @param hairColor hair color
+     * @param nationality nationality
+     * @param location location
      */
     public Person(Long id, String name, Coordinates coordinates, Long height, LocalDateTime birthday,
         Color hairColor, Country nationality, Location location)
@@ -53,7 +53,7 @@ public class Person implements Comparable<Person> {
 
     /**
      * Checks whether the element's fields match their requirements
-     * @return boolean True if the requirements are satisfied, false otherwise
+     * @return True if the requirements are satisfied, false otherwise
      */
     public boolean check() {
         return (id != null && id > 0) && (name != null && !name.trim().isEmpty()) && (coordinates!= null && coordinates.check()) &&
@@ -106,8 +106,8 @@ public class Person implements Comparable<Person> {
 
     /**
      * Overridden method for comparing two elements
-     * @param p Person comparable object
-     * @return boolean result of comparing the elements' heights
+     * @param p Another element
+     * @return Result of comparing the elements' heights
      */
     @Override
     public int compareTo(Person p) {

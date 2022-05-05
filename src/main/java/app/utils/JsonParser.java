@@ -17,11 +17,18 @@ import java.util.Vector;
  */
 public class JsonParser implements GetFile {
     private final ObjectMapper mapper = new ObjectMapper();
+    private final String filepath;
+    private final String defaultPath;
+
+    public JsonParser(String filepath, String defaultPath) {
+        this.filepath = filepath;
+        this.defaultPath = defaultPath;
+    }
 
     /**
      * Parses a json string into a collection
-     * @param json String Json string
-     * @return CollectionManager Collection manager that manages the collection stored in json string
+     * @param json Json string
+     * @return Collection manager that manages the collection stored in json string
      * @throws CannotInitializeCollectionException Thrown when the collection can't be initialized
      */
     public CollectionManager jsonStringToCollection(String json) throws CannotInitializeCollectionException {
@@ -37,8 +44,8 @@ public class JsonParser implements GetFile {
 
     /**
      * Converts a collection into a json string
-     * @param collection {@literal Vector<Person>} The collection
-     * @return String The resulting string
+     * @param collection The collection
+     * @return The resulting string
      * @throws JsonProcessingException Thrown when the collection can't be processed into json
      */
     public String collectionToJsonString(Vector<Person> collection) throws JsonProcessingException {
@@ -49,14 +56,13 @@ public class JsonParser implements GetFile {
 
     /**
      * Converts the contents of the file into a string
-     * @param filename String The filepath
-     * @return String The resulting string
+     * @return The resulting string
      */
-    public String fileToString(String filename) {
+    public String fileToString() {
         try {
-            getReadableFile(filename);
+            getReadableFile(filepath);
             StringBuilder fileContent = new StringBuilder();
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filepath)));
             String line = br.readLine();
             while (line != null) {
                 fileContent.append(line);
@@ -71,15 +77,13 @@ public class JsonParser implements GetFile {
 
     /**
      * Writes a string to a file
-     * @param filename The filepath
-     * @param defaultName The default filepath in case the first one doesn't result in a writable file
-     * @param s String The string
-     * @return String The absolute path of the file the string has been written into
+     * @param s The string
+     * @return The absolute path of the file the string has been written into
      * @throws NoFileException Thrown when neither the first nor the second filepath result in a writable file
      */
-    public String writeStringToFile(String filename, String defaultName, String s) throws NoFileException {
+    public String writeStringToFile(String s) throws NoFileException {
         try {
-            File file = getWritableFile(filename, defaultName);
+            File file = getWritableFile(filepath, defaultPath);
             PrintWriter p = new PrintWriter(file);
             p.print(s);
             p.close();
@@ -91,29 +95,26 @@ public class JsonParser implements GetFile {
 
     /**
      * Converts a json file into a collection
-     * @param filename String The filepath
-     * @return CollectionManager Collection manager for the resulting collection
+     * @return Collection manager for the resulting collection
      */
-    public CollectionManager fileToCollection(String filename) {
+    public CollectionManager fileToCollection() {
         try {
-            return jsonStringToCollection(fileToString(filename));
+            return jsonStringToCollection(fileToString());
         } catch (CannotInitializeCollectionException e) {
-            System.out.println("Cannot initialize collection" + ((filename == null)? " — enviroment variable LAB5_PATH is not set" :
-                    (" stored in "+ filename)) +". The collection will be empty.");
+            System.out.println("Cannot initialize collection" + ((filepath == null)? " — enviroment variable LAB5_PATH is not set" :
+                    (" stored in "+ filepath)) +". The collection will be empty.");
             return new CollectionManager();
         }
     }
 
     /**
      * Saves the collection to a file in json format
-     * @param filename String The filepath
-     * @param defaultName String The second filepath in case the first one doesn't result in a writable file
-     * @param collection {@literal Vector<Person>} The collection
-     * @return String The result
+     * @param collection The collection
+     * @return The result
      */
-    public String writeCollectionToFile(String filename, String defaultName, Vector<Person> collection) {
+    public String writeCollectionToFile(Vector<Person> collection) {
         try {
-            String filepath = writeStringToFile(filename, defaultName, collectionToJsonString(collection));
+            String filepath = writeStringToFile(collectionToJsonString(collection));
             return "The collection has been saved to " + filepath + ".";
         } catch (JsonProcessingException e) {
             return "Unknown error: can't convert this collection to json.";
